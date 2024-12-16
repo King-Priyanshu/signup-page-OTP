@@ -24,9 +24,6 @@ This implementation allows users to sign up on your Django web application with 
 
 
 
-
-
-
             otp = str(random.randint(1000, 9999))
             request.session['otp'] = otp  # Store OTP in session
 
