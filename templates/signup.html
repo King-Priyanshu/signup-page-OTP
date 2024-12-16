@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
+    <link rel="stylesheet" href="{% static 'verify.css' %}">
     <link rel="stylesheet" href="{% static 'login.css' %}">
     <title>Signup</title>
 </head>
 <body>
+    <script>
+
+        {% if note %}
+        alert("{{ note }}");
+        {% endif %}
+    </script>
     <div class="container">
       <h1>Signup</h1>
-    <div >
+      <div>
         <!-- Include the CSRF token -->
-        <form action="" style="" class="form" method="post">
+        <form action="" class="form" id="signup-form" method="post">
             {% csrf_token %}
             
             <label for="username">Username:</label>
@@ -23,15 +30,41 @@
             
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" placeholder="*******" required>
-            
-            <button type="submit"  formaction="{% url 'login:signup' %}">Signup</button>
-       <div>Click here to <a style="font-weight: bold;" href="{% url 'login:loginPage' %}" class="btn">Login</a></div>
-    </form>
+          
+            <div class="otp-inputs" id="otp"  name="otp">
+                {% for i in otp_range %}
+                <input
+                    type="text"
+                    name="otp_digit_{{ i }}"
+                    class="otp-input"
+                    pattern="\d*"
+                    maxlength="1"
+                    aria-label="Enter OTP digit {{ i }}"
+                    oninput="moveFocus(this, {{ i }})"
+                />
+            {% endfor %}
 
-</div>
-    
+            </div>
+
+            <button type="submit" style=" margin-bottom: 5px;" id="get-otp" formaction="{% url 'login:send_otp' %}" class="submit-button">
+                Get OTP
+            </button>
+            
+            <button class="submit-button" type="submit" formaction="{% url 'login:signup' %}">Signup</button>
+            <div>Click here to <a style="font-weight: bold;" href="{% url 'login:loginPage' %}" class="btn">Login</a></div>
+        </form>
+      </div>
     </div>
-    
-    
+
+    <script src="{% static 'path/to/your/js/file.js' %}"></script>
+    <script>
+
+function moveFocus(currentInput, index) {
+        if (currentInput.value.length === 1 && index < 3) {
+            // Move focus to the next input field
+            document.getElementsByName(`otp_digit_${index + 1}`)[0].focus();
+        }
+    }
+    </script>
 </body>
 </html>

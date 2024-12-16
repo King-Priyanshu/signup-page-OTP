@@ -9,5 +9,6 @@ urlpatterns = [
     path('', views.signupPage, name="signupPage"),  # Route for the signup page
     path('login/', views.loginPage, name="loginPage"),  # Login page route
     path('signup/', views.signup, name="signup"),  # Handle signup form submission
-    path('login/authenticate/', views.login, name="login"),  # Route for login form submission (renamed)
+    path('login/authenticate/', views.login, name="login"),
+      path('send-otp/', views.send_otp, name='send_otp'),  # Route for login form submission (renamed)
 ]

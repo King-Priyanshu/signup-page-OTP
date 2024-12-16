@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Phone Verification</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'verify.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mobile Phone Verification</h1>
+            <p>Enter the 4-digit verification code that was sent to your phone number.</p>
+        </header>
+        <form id="otp-form" method="post" action="">
+            {% csrf_token %}
+            <div class="otp-inputs">
+                {% for i in otp_range %}
+                <input
+                    type="text"
+                    name="otp_digit_{{ i }}"
+                    class="otp-input"
+                    pattern="\d*" maxlength="1" />
+                {% endfor %}
+            </div>
+            <div class="submit-button-container">
+                <button type="submit" class="submit-button">
+                    Verify Account
+                </button>
+            </div>
+        </form>
+        <div class="resend-container">
+            Didn't receive code? 
+            <a class="resend-link" href="">Resend</a>
+        </div>
+    </div>
+    <script src="{% static 'path/to/your/js/file.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('otp-form')
+            const inputs = [...form.querySelectorAll('input[type=text]')]
+            const submit = form.querySelector('button[type=submit]')
+    
+            const handleKeyDown = (e) => {
+                if (
+                    !/^[0-9]{1}$/.test(e.key)
+                    && e.key !== 'Backspace'
+                    && e.key !== 'Delete'
+                    && e.key !== 'Tab'
+                    && !e.metaKey
+                ) {
+                    e.preventDefault()
+                }
+    
+                if (e.key === 'Delete' || e.key === 'Backspace') {
+                    const index = inputs.indexOf(e.target);
+                    if (index > 0) {
+                        inputs[index - 1].value = '';
+                        inputs[index - 1].focus();
+                    }
+                }
+            }
+    
+            const handleInput = (e) => {
+                const { target } = e
+                const index = inputs.indexOf(target)
+                if (target.value) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus()
+                    } else {
+                        submit.focus()
+                    }
+                }
+            }
+    
+            const handleFocus = (e) => {
+                e.target.select()
+            }
+    
+            const handlePaste = (e) => {
+                e.preventDefault()
+                const text = e.clipboardData.getData('text')
+                if (!new RegExp(`^[0-9]{${inputs.length}}$`).test(text)) {
+                    return
+                }
+                const digits = text.split('')
+                inputs.forEach((input, index) => input.value = digits[index])
+                submit.focus()
+            }
+    
+            inputs.forEach((input) => {
+                input.addEventListener('input', handleInput)
+                input.addEventListener('keydown', handleKeyDown)
+                input.addEventListener('focus', handleFocus)
+                input.addEventListener('paste', handlePaste)
+            })
+        })                        
+    </script>
+</body>
+</html>
