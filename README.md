@@ -16,9 +16,8 @@ This implementation allows users to sign up on your Django web application with 
 
         # Join OTP digits into a single string
         otp = ''.join(otp_digits)
-        print(f"Entered OTP: {otp}")
+        
 
-        print(username, otp, email)
 
         # Get the OTP stored in session
         session_otp = request.session.get('otp', '')
@@ -28,24 +27,12 @@ This implementation allows users to sign up on your Django web application with 
 
 
 
-    if request.method == 'POST':
-        email = request.POST.get('email', '')
-        username = request.POST.get('username', '')
-
-        if email and username:
-            try:
-                # Validate email format
-                validate_email(email)
-            except ValidationError:
-                return JsonResponse({'status': 'error', 'message': 'Invalid email format'})
-
             otp = str(random.randint(1000, 9999))
             request.session['otp'] = otp  # Store OTP in session
 
-            subject = "Your OTP Code"
-            message = f"Your OTP code is: {otp}\n\nPlease use this code to proceed. It is valid for 10 minutes."
+          
 
-            try:
+           
                 send_mail(
                     subject,
                     message,
@@ -56,4 +43,11 @@ This implementation allows users to sign up on your Django web application with 
      
 
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your_email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your_app_password'  # Use an app password for Gmail
 
